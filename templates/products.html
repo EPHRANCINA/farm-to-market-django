@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farm-to-Market</title>
+</head>
+<body>
+    <h1>Available Crops</h1>
+
+    <form action="/products" method="GET">
+        <input type="text" name="search_query" placeholder="Search for crops...">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    {% if logged_in %}
+        <p>You are logged in.</p>
+        <p><a href="{{ url_for('logout') }}">Logout</a></p>
+    {% else %}
+        <p>
+            Please <a href="{{ url_for('login') }}">Login</a> or
+            <a href="{{ url_for('register') }}">Register</a>.
+        </p>
+    {% endif %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Crop Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Price</th>
+                <th>Region</th>
+                <th>Farmer Name</th>
+                <th>Contact Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for crop in crops %}
+            <tr>
+                <td>{{ crop.crop_name }}</td>
+                <td>{{ crop.quantity }}</td>
+                <td>{{ crop.unit }}</td>
+                <td>{{ crop.price }}</td>
+                <td>{{ crop.region }}</td>
+                <td>{{ crop.farmer_name }}</td>
+                <td>{{ crop.contact_info }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

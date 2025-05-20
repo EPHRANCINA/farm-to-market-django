@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('welcome_title') }}{% endblock %}
+
+{% block additional_styles %}
+.hero-section {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    padding: 4rem 0;
+    border-radius: 20px;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.hero-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.hero-image-container:hover {
+    transform: translateY(-5px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+}
+
+.hero-title {
+    color: #2e7d32;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.hero-subtitle {
+    color: #558b2f;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.hero-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.hero-btn-primary {
+    background: #2e7d32;
+    color: white;
+    border: none;
+}
+
+.hero-btn-primary:hover {
+    background: #1b5e20;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+}
+
+.hero-btn-secondary {
+    background: white;
+    color: #2e7d32;
+    border: 2px solid #2e7d32;
+}
+
+.hero-btn-secondary:hover {
+    background: #2e7d32;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+}
+
+.hero-image-content {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.hero-icon {
+    font-size: 4rem;
+    color: #2e7d32;
+    margin-bottom: 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-image-title {
+    color: #2e7d32;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-image-subtitle {
+    color: #558b2f;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.feature-card .card-title {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.features-section {
+    padding: 4rem 0;
+}
+
+.features-title {
+    color: #2e7d32;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="row align-items-center">
+            <div class="col-md-6 hero-content">
+                <h1 class="hero-title">{{ get_translation('welcome_title') }}</h1>
+                <p class="hero-subtitle">{{ get_translation('welcome_subtitle') }}</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('register') }}" class="btn hero-btn hero-btn-primary">{{ get_translation('get_started') }}</a>
+                    <a href="#features" class="btn hero-btn hero-btn-secondary">{{ get_translation('learn_more') }}</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="hero-image-container">
+                    <div class="hero-image-content">
+                        <i class="fas fa-seedling hero-icon"></i>
+                        <h3 class="hero-image-title">Farm to Market</h3>
+                        <p class="hero-image-subtitle">Connecting farmers with buyers</p>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <i class="fas fa-tractor fa-2x mb-2" style="color: #2e7d32;"></i>
+                                    <p class="mb-0">Farmers</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <i class="fas fa-shopping-cart fa-2x mb-2" style="color: #2e7d32;"></i>
+                                    <p class="mb-0">Buyers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="features-section">
+        <h2 class="features-title">{{ get_translation('features') }}</h2>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 feature-card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ get_translation('for_farmers') }}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="h5">{{ get_translation('feature1_title') }}</h4>
+                                <p>{{ get_translation('feature1_desc') }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="h5">{{ get_translation('feature2_title') }}</h4>
+                                <p>{{ get_translation('feature2_desc') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 feature-card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ get_translation('for_buyers') }}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="h5">{{ get_translation('feature3_title') }}</h4>
+                                <p>{{ get_translation('feature3_desc') }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="h5">{{ get_translation('feature4_title') }}</h4>
+                                <p>{{ get_translation('feature4_desc') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('farmer_dashboard') }} - Farm to Market{% endblock %}
+
+{% block additional_styles %}
+.crop-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.table td {
+    vertical-align: middle;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ get_translation('welcome') }}, {{ session.get('username', '') }}!</h2>
+                <p class="lead">{{ get_translation('manage_crops') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">{{ get_translation('add_new_crop') }}</h3>
+                <form action="{{ url_for('add_crop') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="crop_name" class="form-label">{{ get_translation('crop_name') }}</label>
+                        <input type="text" class="form-control" id="crop_name" name="crop_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">{{ get_translation('quantity') }}</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unit" class="form-label">{{ get_translation('unit') }}</label>
+                        <select class="form-control" id="unit" name="unit" required>
+                            <option value="">{{ get_translation('select_unit') }}</option>
+                            <option value="kg">{{ get_translation('kg') }}</option>
+                            <option value="tons">{{ get_translation('tons') }}</option>
+                            <option value="grams">{{ get_translation('grams') }}</option>
+                            <option value="lbs">{{ get_translation('lbs') }}</option>
+                            <option value="bags">{{ get_translation('bags') }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">{{ get_translation('price') }}</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="region" class="form-label">{{ get_translation('region') }}</label>
+                        <input type="text" class="form-control" id="region" name="region" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="farmer_name" class="form-label">{{ get_translation('farmer_name') }}</label>
+                        <input type="text" class="form-control" id="farmer_name" name="farmer_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact_info" class="form-label">{{ get_translation('contact_info') }}</label>
+                        <input type="text" class="form-control" id="contact_info" name="contact_info" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">{{ get_translation('crop_image') }}</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ get_translation('add_crop') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">{{ get_translation('your_crops') }}</h3>
+                {% if crops %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ get_translation('image') }}</th>
+                                    <th>{{ get_translation('crop_name') }}</th>
+                                    <th>{{ get_translation('quantity') }}</th>
+                                    <th>{{ get_translation('unit') }}</th>
+                                    <th>{{ get_translation('price') }}</th>
+                                    <th>{{ get_translation('region') }}</th>
+                                    <th>{{ get_translation('farmer_name') }}</th>
+                                    <th>{{ get_translation('contact_info') }}</th>
+                                    <th>{{ get_translation('date_posted') }}</th>
+                                    <th>{{ get_translation('actions') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for crop in crops %}
+                                    <tr>
+                                        <td>
+                                            {% if crop.image_path %}
+                                                <img src="{{ url_for('static', filename=crop.image_path.replace('\\', '/')) }}"
+                                                     class="crop-image"
+                                                     alt="{{ crop.crop_name }}">
+                                            {% else %}
+                                                <span class="text-muted">{{ get_translation('no_image') }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ crop.crop_name }}</td>
+                                        <td>{{ crop.quantity }}</td>
+                                        <td>{{ crop.unit }}</td>
+                                        <td>{{ crop.price }}</td>
+                                        <td>{{ crop.region }}</td>
+                                        <td>{{ crop.farmer_name }}</td>
+                                        <td>{{ crop.contact_info }}</td>
+                                        <td>{{ crop.date_posted }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ url_for('edit_crop', crop_id=crop.id) }}" class="btn btn-sm btn-primary">
+                                                    {{ get_translation('edit') }}
+                                                </a>
+                                                <form action="{{ url_for('delete_crop', crop_id=crop.id) }}" method="POST" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{{ get_translation('delete_confirm') }}')">
+                                                        {{ get_translation('delete') }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        {{ get_translation('no_crops') }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

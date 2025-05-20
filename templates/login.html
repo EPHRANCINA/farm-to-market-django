@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('login_title') }} - Farm to Market{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">{{ get_translation('login_title') }}</h2>
+                <p class="text-center text-muted mb-4">{{ get_translation('login_subtitle') }}</p>
+                
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">{{ get_translation('username') }}</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{{ get_translation('password') }}</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">{{ get_translation('remember_me') }}</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">{{ get_translation('login_button') }}</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="mb-0">{{ get_translation('no_account') }} 
+                        <a href="{{ url_for('register') }}" class="text-decoration-none">{{ get_translation('register_link') }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function validateForm() {
+        let valid = true;
+        const errors = {};
+
+        function showError(fieldId, message) {
+            document.getElementById(fieldId + '-error').textContent = message;
+            errors[fieldId] = message;
+            valid = false;
+        }
+
+        function clearError(fieldId) {
+            document.getElementById(fieldId + '-error').textContent = "";
+            delete errors[fieldId];
+        }
+
+        const username = document.getElementById('username').value.trim();
+        if (!username) {
+            showError('username', 'Username is required');
+        } else {
+            clearError('username');
+        }
+
+        const password = document.getElementById('password').value;
+        if (!password) {
+            showError('password', 'Password is required');
+        } else {
+            clearError('password');
+        }
+
+        return valid;
+    }
+
+    // Clear error messages when user starts typing
+    document.getElementById('username').addEventListener('input', function() {
+        document.getElementById('username-error').textContent = '';
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+        document.getElementById('password-error').textContent = '';
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('buyer_dashboard') }} - Farm to Market{% endblock %}
+
+{% block additional_styles %}
+.crop-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.crop-image:hover {
+    transform: scale(1.05);
+}
+.table td {
+    vertical-align: middle;
+}
+.modal-body img {
+    max-height: 80vh;
+    width: auto;
+}
+.search-box {
+    margin-bottom: 20px;
+}
+.pagination {
+    margin-top: 20px;
+    justify-content: center;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ get_translation('welcome') }}, {{ session.get('username', '') }}!</h2>
+                <p class="lead">{{ get_translation('browse_crops') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('buyer_dashboard') }}" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="search" placeholder="{{ get_translation('search_placeholder') }}" value="{{ search }}">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" name="region">
+                            <option value="">{{ get_translation('filter_region') }}</option>
+                            {% for r in regions %}
+                                <option value="{{ r }}" {% if r == region %}selected{% endif %}>{{ r }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" name="sort">
+                            <option value="date" {% if sort == 'date' %}selected{% endif %}>{{ get_translation('newest') }}</option>
+                            <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>{{ get_translation('price_low') }}</option>
+                            <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>{{ get_translation('price_high') }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">{{ get_translation('search') }}</button>
+                    </div>
+                </form>
+
+                {% if crops %}
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ get_translation('image') }}</th>
+                                    <th>{{ get_translation('crop_name') }}</th>
+                                    <th>{{ get_translation('quantity') }}</th>
+                                    <th>{{ get_translation('unit') }}</th>
+                                    <th>{{ get_translation('price') }}</th>
+                                    <th>{{ get_translation('region') }}</th>
+                                    <th>{{ get_translation('farmer') }}</th>
+                                    <th>{{ get_translation('contact') }}</th>
+                                    <th>{{ get_translation('date_posted') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for crop in crops %}
+                                <tr>
+                                    <td>
+                                        {% if crop.image_path %}
+                                            <img src="{{ url_for('static', filename=crop.image_path.replace('\\', '/')) }}"
+                                                 class="crop-image"
+                                                 alt="{{ crop.crop_name }}"
+                                                 onclick="showImage(this.src)">
+                                        {% else %}
+                                            <span class="text-muted">{{ get_translation('no_image') }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ crop.crop_name }}</td>
+                                    <td>{{ crop.quantity }}</td>
+                                    <td>{{ crop.unit }}</td>
+                                    <td>{{ crop.price }}</td>
+                                    <td>{{ crop.region }}</td>
+                                    <td>{{ crop.farmer_name }}</td>
+                                    <td>{{ crop.contact_info }}</td>
+                                    <td>{{ crop.date_posted }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if total_pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('buyer_dashboard', page=page-1, search=search, region=region, sort=sort) }}">
+                                    {{ get_translation('previous') }}
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for p in range(1, total_pages + 1) %}
+                            <li class="page-item {% if p == page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('buyer_dashboard', page=p, search=search, region=region, sort=sort) }}">
+                                    {{ p }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            
+                            {% if page < total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('buyer_dashboard', page=page+1, search=search, region=region, sort=sort) }}">
+                                    {{ get_translation('next') }}
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        {{ get_translation('no_crops') }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">{{ get_translation('image_preview') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ get_translation('close') }}"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="{{ get_translation('crop_image') }}" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showImage(src) {
+    document.getElementById('modalImage').src = src;
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
+}
+</script>
+{% endblock %}

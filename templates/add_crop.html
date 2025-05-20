@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Add Crop - Farm to Market{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Add New Crop Information</h2>
+            <form method="POST" action="/add_crop" onsubmit="return validateForm()" enctype="multipart/form-data">
+                {% if errors %}
+                    <div class="alert alert-danger">
+                        {% for field, message in errors.items() %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="crop_name" class="form-label">Crop Name</label>
+                    <input type="text" class="form-control" id="crop_name" name="crop_name" required
+                           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+                    <span id="crop_name-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required min="1">
+                    <span id="quantity-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="unit" class="form-label">Unit</label>
+                    <input type="text" class="form-control" id="unit" name="unit" required
+                           pattern="kg|tons|grams|lbs|bags" title="Enter kg, tons, grams, lbs, or bags">
+                    <span id="unit-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" required min="1">
+                    <span id="price-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="region" class="form-label">Region</label>
+                    <input type="text" class="form-control" id="region" name="region" required
+                           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+                    <span id="region-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="farmer_name" class="form-label">Farmer Name</label>
+                    <input type="text" class="form-control" id="farmer_name" name="farmer_name" required
+                           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+                    <span id="farmer_name-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_info" class="form-label">Contact Information</label>
+                    <input type="text" class="form-control" id="contact_info" name="contact_info" required
+                           pattern="^0[0-9]{9}$" title="Enter exactly 10 digits, starting with 0">
+                    <span id="contact_info-error" class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="image" class="form-label">Crop Image</label>
+                    <div class="image-upload-container">
+                        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                        <div id="image-preview" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function validateForm() {
+        let valid = true;
+        const errors = {};
+
+        // Helper function to display errors
+        function showError(fieldId, message) {
+            document.getElementById(fieldId + '-error').textContent = message;
+            errors[fieldId] = message;
+        }
+
+        // Helper function to clear errors
+        function clearError(fieldId) {
+            document.getElementById(fieldId + '-error').textContent = "";
+            delete errors[fieldId];
+        }
+
+        // Crop Name Validation
+        const cropName = document.getElementById('crop_name').value.trim();
+        if (!cropName) {
+            showError('crop_name', 'Crop name is required');
+            valid = false;
+        } else if (!/^[A-Za-z\s]+$/.test(cropName)) {
+            showError('crop_name', 'Only letters and spaces are allowed');
+            valid = false;
+        } else {
+            clearError('crop_name');
+        }
+
+        // Quantity Validation
+        const quantity = document.getElementById('quantity').value.trim();
+        if (!quantity) {
+            showError('quantity', 'Quantity is required');
+            valid = false;
+        } else if (isNaN(quantity) || Number(quantity) <= 0) {
+            showError('quantity', 'Quantity must be a number greater than 0');
+            valid = false;
+        } else {
+            clearError('quantity');
+        }
+
+        // Unit Validation
+        const unit = document.getElementById('unit').value.trim();
+        if (!unit) {
+            showError('unit', 'Unit is required');
+            valid = false;
+        } else if (!/^(kg|tons|grams|lbs|bags)$/.test(unit)) {
+            showError('unit', 'Please enter kg, tons, grams, lbs, or bags');
+            valid = false;
+        } else {
+            clearError('unit');
+        }
+
+        // Price Validation
+        const price = document.getElementById('price').value.trim();
+        if (!price) {
+            showError('price', 'Price is required');
+            valid = false;
+        } else if (isNaN(price) || Number(price) <= 0) {
+            showError('price', 'Price must be a number greater than 0');
+            valid = false;
+        } else {
+            clearError('price');
+        }
+
+        // Region Validation
+        const region = document.getElementById('region').value.trim();
+        if (!region) {
+            showError('region', 'Region is required');
+            valid = false;
+        } else if (!/^[A-Za-z\s]+$/.test(region)) {
+            showError('region', 'Only letters and spaces are allowed');
+            valid = false;
+        } else {
+            clearError('region');
+        }
+
+        // Farmer Name Validation
+        const farmerName = document.getElementById('farmer_name').value.trim();
+        if (!farmerName) {
+            showError('farmer_name', 'Farmer name is required');
+            valid = false;
+        } else if (!/^[A-Za-z\s]+$/.test(farmerName)) {
+            showError('farmer_name', 'Only letters and spaces are allowed');
+            valid = false;
+        } else {
+            clearError('farmer_name');
+        }
+
+        // Contact Information Validation
+        const contactInfo = document.getElementById('contact_info').value.trim();
+        if (!contactInfo) {
+            showError('contact_info', 'Contact information is required');
+            valid = false;
+        } else if (!/^0[0-9]{9}$/.test(contactInfo)) {
+            showError('contact_info', 'Enter exactly 10 digits, starting with 0');
+            valid = false;
+        } else {
+            clearError('contact_info');
+        }
+
+        // Image Validation
+        const image = document.getElementById('image').files[0];
+        if (image) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(image.type)) {
+                showError('image', 'Only JPG, PNG, and GIF images are allowed');
+                valid = false;
+            }
+        }
+
+        if (!valid) {
+            return false;
+        }
+        return true;
+    }
+
+    // Image preview functionality
+    document.getElementById('image').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('image-preview');
+                preview.appendChild(img);
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

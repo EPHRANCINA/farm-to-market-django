@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('edit_crop') }} - Farm to Market{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ get_translation('edit_crop') }}</h2>
+                <form action="{{ url_for('edit_crop', crop_id=crop.id) }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="crop_name" class="form-label">{{ get_translation('crop_name') }}</label>
+                        <input type="text" class="form-control" id="crop_name" name="crop_name" value="{{ crop.crop_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">{{ get_translation('quantity') }}</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" step="0.01" value="{{ crop.quantity }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unit" class="form-label">{{ get_translation('unit') }}</label>
+                        <select class="form-control" id="unit" name="unit" required>
+                            <option value="">{{ get_translation('select_unit') }}</option>
+                            <option value="kg" {% if crop.unit == 'kg' %}selected{% endif %}>{{ get_translation('kg') }}</option>
+                            <option value="tons" {% if crop.unit == 'tons' %}selected{% endif %}>{{ get_translation('tons') }}</option>
+                            <option value="grams" {% if crop.unit == 'grams' %}selected{% endif %}>{{ get_translation('grams') }}</option>
+                            <option value="lbs" {% if crop.unit == 'lbs' %}selected{% endif %}>{{ get_translation('lbs') }}</option>
+                            <option value="bags" {% if crop.unit == 'bags' %}selected{% endif %}>{{ get_translation('bags') }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">{{ get_translation('price') }}</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ crop.price }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="region" class="form-label">{{ get_translation('region') }}</label>
+                        <input type="text" class="form-control" id="region" name="region" value="{{ crop.region }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="farmer_name" class="form-label">{{ get_translation('farmer_name') }}</label>
+                        <input type="text" class="form-control" id="farmer_name" name="farmer_name" value="{{ crop.farmer_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact_info" class="form-label">{{ get_translation('contact_info') }}</label>
+                        <input type="text" class="form-control" id="contact_info" name="contact_info" value="{{ crop.contact_info }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">{{ get_translation('crop_image') }}</label>
+                        {% if crop.image_path %}
+                            <div class="mb-2">
+                                <img src="{{ url_for('static', filename=crop.image_path) }}" alt="{{ crop.crop_name }}" class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">{{ get_translation('image_optional') }}</small>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">{{ get_translation('update_crop') }}</button>
+                        <a href="{{ url_for('farmer_dashboard') }}" class="btn btn-secondary">{{ get_translation('cancel') }}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

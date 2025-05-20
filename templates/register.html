@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}{{ get_translation('register_title') }} - Farm to Market{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">{{ get_translation('register_title') }}</h2>
+                <p class="text-center text-muted mb-4">{{ get_translation('register_subtitle') }}</p>
+                
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">{{ get_translation('username') }}</label>
+                        <input type="text" class="form-control" id="username" name="username" required 
+                               pattern="^[A-Za-z0-9_]{3,20}$" 
+                               title="Username must be 3-20 characters long and can only contain letters, numbers, and underscores">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{{ get_translation('email') }}</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{{ get_translation('password') }}</label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                               pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+                               title="Password must contain at least one number, one uppercase and lowercase letter, and be at least 8 characters long">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">{{ get_translation('confirm_password') }}</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">{{ get_translation('role') }}</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">{{ get_translation('select_role') }}</option>
+                            <option value="farmer">{{ get_translation('farmer_role') }}</option>
+                            <option value="buyer">{{ get_translation('buyer_role') }}</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">{{ get_translation('register_button') }}</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="mb-0">{{ get_translation('have_account') }}
+                        <a href="{{ url_for('login') }}" class="text-decoration-none">{{ get_translation('login_link') }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (password !== confirmPassword) {
+        this.setCustomValidity('Passwords do not match');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
