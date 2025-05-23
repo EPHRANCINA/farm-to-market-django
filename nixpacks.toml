@@ -2,4 +2,7 @@
 name = "postgresql"
 
 [[packages]]
-name = "libpq" 
+name = "libpq"
+
+[[packages]]
+name = "postgresql_16.dev" 
