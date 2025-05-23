@@ -1,1 +1,2 @@
-web: gunicorn farm_to_market.wsgi:application 
+web: gunicorn farm_to_market.wsgi:application
+release: python manage.py migrate 
