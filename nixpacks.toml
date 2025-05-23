@@ -1,2 +1,5 @@
 [[packages]]
-name = "postgresql" 
+name = "postgresql"
+
+[[packages]]
+name = "libpq" 
