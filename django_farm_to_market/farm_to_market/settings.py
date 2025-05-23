@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'farm_to_market.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
